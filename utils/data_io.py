@@ -31,12 +31,6 @@ class DataIO:
         if not isinstance(output_path, str):
             raise TypeError("Output path must be a string.")
 
-        output_path = pathlib.Path(output_path).as_posix()
-
-        print(f"Saving data to: {output_path}/{file_name}")
-
-        pathlib.Path(output_path).mkdir(parents=True, exist_ok=True)
-
         if not file_name:
             raise ValueError("File name must be provided.")
         if not isinstance(file_name, str):
@@ -44,14 +38,19 @@ class DataIO:
         if not file_name.endswith(".parquet"):
             raise ValueError("File name must end with .parquet extension.")
 
-        if os.path.isfile(f"{output_path}/{file_name}"):
-            raise FileExistsError(f"File already exists.")
+        output_path = pathlib.Path(output_path).as_posix()
+
+        pathlib.Path(output_path).mkdir(parents=True, exist_ok=True)
+
+        full_output_path = f"{output_path}/{file_name}"
+        if os.path.isfile(full_output_path):
+            raise FileExistsError(f"File already exists at '{full_output_path}'.")
 
         try:
-            df.write_parquet(f"{output_path}/{file_name}")
+            df.write_parquet(full_output_path)
         except Exception as exc:
             raise RuntimeError(
-                f"Failed to write DataFrame to parquet file at '{output_path}': {exc}"
+                f"Failed to write DataFrame to parquet file at '{full_output_path}': {exc}"
             ) from exc
 
 
