@@ -1,8 +1,9 @@
 import polars as pl
 import os
+import pathlib
 
 
-class DataLoader:
+class DataIO:
     def __init__(self, path: str) -> None:
         self.path = path
 
@@ -11,6 +12,8 @@ class DataLoader:
             raise ValueError("Data path must be provided.")
         if not isinstance(self.path, str):
             raise TypeError("Data path must be a string.")
+
+        self.path = pathlib.Path(self.path).as_posix()
 
         # Get data type from file extension
         if self.path.endswith(".parquet"):
@@ -28,12 +31,11 @@ class DataLoader:
         if not isinstance(output_path, str):
             raise TypeError("Output path must be a string.")
 
-        # Extract path from output path if it includes a file name
-        if os.path.basename(output_path) != "":
-            output_path = os.path.dirname(output_path)
+        output_path = pathlib.Path(output_path).as_posix()
 
-        if not os.path.exists(output_path):
-            os.makedirs(output_path)
+        print(f"Saving data to: {output_path}/{file_name}")
+
+        pathlib.Path(output_path).mkdir(parents=True, exist_ok=True)
 
         if not file_name:
             raise ValueError("File name must be provided.")
@@ -41,6 +43,9 @@ class DataLoader:
             raise TypeError("File name must be a string.")
         if not file_name.endswith(".parquet"):
             raise ValueError("File name must end with .parquet extension.")
+
+        if os.path.isfile(f"{output_path}/{file_name}"):
+            raise FileExistsError(f"File already exists.")
 
         try:
             df.write_parquet(f"{output_path}/{file_name}")
@@ -51,11 +56,11 @@ class DataLoader:
 
 
 if __name__ == "__main__":
-    data_loader = DataLoader("./data/yellow_tripdata_2025-06.parquet")
-    tripdata = data_loader.load_data()
+    data_io = DataIO("./data/yellow_tripdata_2025-06.parquet")
+    tripdata = data_io.load_data()
 
     tripdata.head(5).show()
 
     output_dir = "./output/source/"
     file_name = "tripdata_sample.parquet"
-    data_loader.save_data(tripdata.head(1000), output_dir, file_name)
+    data_io.save_data(tripdata.head(1000), output_dir, file_name)
