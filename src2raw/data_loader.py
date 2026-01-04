@@ -2,10 +2,13 @@ import polars as pl
 
 
 class DataLoader:
-    def __init__(self, path):
+    def __init__(self, path: str) -> None:
         self.path = path
 
     def load_data(self) -> pl.DataFrame:
+        assert self.path, "Data path must be provided."
+        assert isinstance(self.path, str), "Data path must be a string."
+
         # Get data type from file extension
         if self.path.endswith(".parquet"):
             return pl.read_parquet(self.path)
@@ -18,8 +21,6 @@ class DataLoader:
 
     def write_data_as_parquet(self, df: pl.DataFrame, output_path: str) -> None:
         df.write_parquet(output_path)
-
-        return None
 
 
 if __name__ == "__main__":
