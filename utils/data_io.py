@@ -16,9 +16,11 @@ class DataIO:
         if not os.path.exists(self.input_path):
             raise FileNotFoundError(f"Data path '{self.input_path}' does not exist.")
 
-        self.input_path = pathlib.Path(self.input_path).as_posix()
+        input_path = pathlib.Path(self.input_path).as_posix()
 
-        full_input_path = f"{self.input_path}/{file_name}"
+        full_input_path = os.path.join(input_path, file_name)
+        if not os.path.isfile(full_input_path):
+            raise FileNotFoundError(f"File '{full_input_path}' does not exist.")
 
         # Get data type from file extension
         if full_input_path.endswith(".parquet"):
@@ -47,7 +49,7 @@ class DataIO:
 
         pathlib.Path(output_path).mkdir(parents=True, exist_ok=True)
 
-        full_output_path = f"{output_path}/{file_name}"
+        full_output_path = os.path.join(output_path, file_name)
         if os.path.isfile(full_output_path):
             raise FileExistsError(f"File already exists at '{full_output_path}'.")
 
