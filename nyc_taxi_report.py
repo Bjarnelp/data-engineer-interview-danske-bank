@@ -153,6 +153,10 @@ class TaxiPipeline:
         data_io.save_data(df.collect(), file_name="taxi_report.parquet")
 
 
-if __name__ == "__main__":
+def entrypoint():
     pipeline = TaxiPipeline()
     pipeline.launch()
+
+
+if __name__ == "__main__":
+    entrypoint()
