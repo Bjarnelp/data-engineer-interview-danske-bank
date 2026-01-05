@@ -96,7 +96,7 @@ class TaxiPipeline:
             ),
         )
 
-        # Create dataframe of the 10 pick up boroughs with the highest average fare amount per distance travelled
+        # Create dataframe of aggregated metrics (average fare per distance, average trip duration, trip count) per vendor and pickup/dropoff zone combination
         enriched = tripdata_lazy.group_by(
             ["VendorID", "VendorName", "PU_Borough", "PU_Zone", "DO_Zone"]
         ).agg(
