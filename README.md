@@ -18,6 +18,6 @@ The solution consists of
 
   The final report is saved as parquet file in the output directory.
 
-For data processing the Polars library was chosen. The reason for this is, that Polars is high performant on medium sized datasets while being lightweight enough to run on a standalone computer. Moreover the syntax for Polars to a great extent resembles that of Apache Spark.
+For data processing the Polars library was chosen. The reason for this is, that Polars is high-performance on medium sized datasets while being lightweight enough to run on a standalone computer. Moreover the syntax for Polars to a great extent resembles that of Apache Spark.
 
 The pipeline has been created as a python class incorporating a launch function. This structure is chosen as it aligns with how Databricks Asset Bundles most easily handles task deployments.
