@@ -105,7 +105,7 @@ class TaxiPipeline:
             pl.len().alias("num_trips"),
         )
 
-        # Create a data frame showing for each PU borough and zone the vendor name with the lowest average fare per distance, the total number of trips making up the average as well as the average time travelled for the trips
+        # Create a data frame showing, for each route (pickup zone to dropoff zone), the vendor name with the lowest average fare per distance, the total number of trips making up the average, as well as the average time travelled for the trips on that route
         df = enriched.select(
             pl.col("PU_Zone")
             .head(1)
